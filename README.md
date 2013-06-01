@@ -1,19 +1,29 @@
 # Miscellaneous auto-load Vim scripts
 
-The git repository at [github.com/xolox/vim-misc] [repository] contains Vim
-scripts that are used by most of the [Vim plug-ins I've written] [plugins]
-yet don't really belong with any single one of the plug-ins. Basically it's
-an extended standard library of Vim script functions that I wrote during the
-development of my Vim profile and plug-ins.
+The vim-misc plug-in contains Vim scripts that are used by most of the [Vim
+plug-ins I've written] [plugins] yet don't really belong with any single one of
+the plug-ins. Basically it's an extended standard library of Vim script
+functions that I wrote during the development of my Vim profile and plug-ins.
 
 In the past these scripts were bundled with each plug-in, however that turned
 out to be a maintenance nightmare for me. That's why the miscellaneous scripts
-are now becoming a proper plug-in with their own page on Vim Online.
+are now a proper plug-in with their own page on Vim Online.
 
 Because the miscellaneous scripts are no longer bundled with my Vim plug-ins,
 users are now required to install the miscellaneous scripts separately. This is
 unfortunate for users who are upgrading from a previous release that did bundle
 the miscellaneous scripts, but I don't see any way around this. Sorry!
+
+## Installation
+
+Unzip the most recent [ZIP archive] [download] file inside your Vim profile
+directory (usually this is `~/.vim` on UNIX and `%USERPROFILE%\vimfiles` on
+Windows), restart Vim and execute the command `:helptags ~/.vim/doc` (use
+`:helptags ~\vimfiles\doc` instead on Windows).
+
+If you prefer you can also use [Pathogen] [pathogen], [Vundle] [vundle] or a
+similar tool to install & update the plug-in using a local clone of the git
+repository.
 
 ## Function documentation
 
@@ -29,7 +39,7 @@ that I haven't published yet.
 <!-- Start of generated documentation -->
 
 The documentation of the 42 functions below was extracted from
-11 Vim scripts on May 24, 2013 at 00:14.
+12 Vim scripts on June  1, 2013 at 14:57.
 
 ### Handling of special buffers
 
@@ -249,7 +259,9 @@ Returns 1 (true) when on Microsoft Windows, 0 (false) otherwise.
 Returns the program name of Vim as a string. On Windows and UNIX this
 simply returns [v:progname] [progname] while on Mac OS X there is some
 special magic to find MacVim's executable even though it's usually not on
-the executable search path.
+the executable search path. If you want, you can override the value
+returned from this function by setting the global variable
+`g:xolox#misc#os#vim_progname`.
 
 [progname]: http://vimdoc.sourceforge.net/htmldoc/eval.html#v:progname
 
@@ -419,6 +431,7 @@ number) into a human friendly format, for example 70 seconds is phrased as
 If you have questions, bug reports, suggestions, etc. the author can be
 contacted at <peter@peterodding.com>. The latest version is available at
 <http://peterodding.com/code/vim/misc> and <http://github.com/xolox/vim-misc>.
+If you like the script please vote for it on [Vim Online] [vim-online].
 
 ## License
 
@@ -426,6 +439,10 @@ This software is licensed under the [MIT license] [mit].
 © 2013 Peter Odding &lt;<peter@peterodding.com>&gt;.
 
 
+[download]: http://peterodding.com/code/vim/downloads/misc.zip
 [mit]: http://en.wikipedia.org/wiki/MIT_License
+[pathogen]: http://www.vim.org/scripts/script.php?script_id=2332
 [plugins]: http://peterodding.com/code/vim/
 [repository]: https://github.com/xolox/vim-misc
+[vim-online]: http://www.vim.org/scripts/script.php?script_id=4597
+[vundle]: https://github.com/gmarik/vundle
