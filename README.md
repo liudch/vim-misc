@@ -16,14 +16,13 @@ the miscellaneous scripts, but I don't see any way around this. Sorry!
 
 ## Installation
 
-Unzip the most recent [ZIP archive] [download] file inside your Vim profile
+Unzip the most recent [ZIP archive] [] file inside your Vim profile
 directory (usually this is `~/.vim` on UNIX and `%USERPROFILE%\vimfiles` on
 Windows), restart Vim and execute the command `:helptags ~/.vim/doc` (use
 `:helptags ~\vimfiles\doc` instead on Windows).
 
-If you prefer you can also use [Pathogen] [pathogen], [Vundle] [vundle] or a
-similar tool to install & update the plug-in using a local clone of the git
-repository.
+If you prefer you can also use [Pathogen] [], [Vundle] [] or a similar tool to
+install & update the plug-in using a local clone of the git repository.
 
 ## Function documentation
 
@@ -33,13 +32,13 @@ plug-ins. I care about backwards compatibility so won't break it without a good
 reason to do so.
 
 For those who are curious: The function descriptions given below were extracted
-from the source code of the miscellaneous scripts using a bit of Python code
-that I haven't published yet.
+from the source code of the miscellaneous scripts using the Python module
+`vimdoctool.py` included in [vim-tools] [].
 
 <!-- Start of generated documentation -->
 
-The documentation of the 42 functions below was extracted from
-12 Vim scripts on June  1, 2013 at 14:57.
+The documentation of the 67 functions below was extracted from
+15 Vim scripts on June  3, 2013 at 21:53.
 
 ### Handling of special buffers
 
@@ -127,6 +126,20 @@ Microsoft Windows).
 
 [shellslash]: http://vimdoc.sourceforge.net/htmldoc/options.html#'shellslash'
 
+### Human friendly string formatting for Vim
+
+#### The `xolox#misc#format#pluralize()` function
+
+Concatenate a counter (the first argument, expected to be an integer) with
+a singular or plural label (the second and third arguments, both expected
+to be strings).
+
+#### The `xolox#misc#format#timestamp()` function
+
+Format a time stamp (a string containing a formatted floating point
+number) into a human friendly format, for example 70 seconds is phrased as
+"1 minute and 10 seconds".
+
 ### List handling functions
 
 #### The `xolox#misc#list#unique()` function
@@ -150,22 +163,39 @@ three arguments:
 
 #### The `xolox#misc#msg#info()` function
 
-Show a formatted informational message to the user. This function has the
-same argument handling as Vim's [printf()] [printf] function.
+Show a formatted informational message to the user.
 
-[printf]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
+This function has the same argument handling as Vim's [printf()] []
+function with one notable difference: Any arguments which are not numbers
+or strings are coerced to strings using Vim's [string()] [] function.
+
+In the case of `xolox#misc#msg#info()`, automatic string coercion simply
+makes the function a bit easier to use.
+
+[printf()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#printf()
+[string()]: http://vimdoc.sourceforge.net/htmldoc/eval.html#string()
 
 #### The `xolox#misc#msg#warn()` function
 
-Show a formatted warning message to the user. This function has the same
-argument handling as Vim's [printf()] [printf] function.
+Show a formatted warning message to the user.
+
+This function has the same argument handling as the
+`xolox#misc#msg#info()` function.
 
 #### The `xolox#misc#msg#debug()` function
 
-Show a formatted debugging message to the user, if the user has enabled
-increased verbosity by setting Vim's ['verbose'] [verbose] option to one
-(1) or higher. This function has the same argument handling as Vim's
-[printf()] [printf] function.
+Show a formatted debugging message to the user, *if the user has enabled
+increased verbosity by setting Vim's ['verbose'] [] option to one
+(1) or higher*.
+
+This function has the same argument handling as the
+`xolox#misc#msg#info()` function.
+
+In the case of `xolox#misc#msg#debug()`, automatic string coercion
+provides lazy evaluation in the sense that complex data structures are
+only converted to strings when the user has enabled increased verbosity.
+
+['verbose']: http://vimdoc.sourceforge.net/htmldoc/options.html#'verbose'
 
 ### Integration between Vim and its environment
 
@@ -256,14 +286,18 @@ Returns 1 (true) when on Microsoft Windows, 0 (false) otherwise.
 
 #### The `xolox#misc#os#find_vim()` function
 
-Returns the program name of Vim as a string. On Windows and UNIX this
-simply returns [v:progname] [progname] while on Mac OS X there is some
-special magic to find MacVim's executable even though it's usually not on
-the executable search path. If you want, you can override the value
-returned from this function by setting the global variable
+Returns the program name of Vim as a string. On Windows and UNIX this just
+[v:progname] [] as an absolute pathname while on Mac OS X there is
+some special magic to find MacVim's executable even though it's usually
+not on the executable search path. If you want, you can override the
+value returned from this function by setting the global variable
 `g:xolox#misc#os#vim_progname`.
 
-[progname]: http://vimdoc.sourceforge.net/htmldoc/eval.html#v:progname
+By default the choice of console Vim vs graphical Vim is made based on
+the value of [v:progname] [], but if you have a preference you can pass
+the string `vim` or `gvim` as the first and only argument.
+
+[v:progname]: http://vimdoc.sourceforge.net/htmldoc/eval.html#v:progname
 
 #### The `xolox#misc#os#exec()` function
 
@@ -381,6 +415,10 @@ Create a temporary directory and return the pathname of the directory.
 
 ### String handling
 
+#### The `xolox#misc#str#ucfirst()` function
+
+Uppercase the first character in a string.
+
 #### The `xolox#misc#str#compact()` function
 
 Compact whitespace in the string given as the first argument.
@@ -389,6 +427,140 @@ Compact whitespace in the string given as the first argument.
 
 Trim all whitespace from the start and end of the string given as the
 first argument.
+
+### Test runner & infrastructure for Vim plug-ins
+
+The Vim auto-load script `autoload/xolox/misc/test.vim` contains
+infrastructure that can be used to run an automated Vim plug-in test suite.
+It provides a framework for running test functions, keeping track of the
+test status, making assertions and reporting test results to the user.
+
+#### The `xolox#misc#test#reset()` function
+
+Reset counters for executed tests and passed/failed assertions.
+
+#### The `xolox#misc#test#summarize()` function
+
+Print a summary of test results, to be interpreted interactively.
+
+#### The `xolox#misc#test#wrap()` function
+
+Call a function in a try/catch block and prevent exceptions from bubbling.
+The name of the function should be passed as the first and only argument;
+it should be a string containing the name of a Vim auto-load function.
+
+#### The `xolox#misc#test#passed()` function
+
+Record a test which succeeded.
+
+#### The `xolox#misc#test#failed()` function
+
+Record a test which failed.
+
+#### The `xolox#misc#test#assert_true()` function
+
+Check whether an expression is true.
+
+#### The `xolox#misc#test#assert_equals()` function
+
+Check whether two values are the same.
+
+#### The `xolox#misc#test#assert_same_type()` function
+
+Check whether two values are of the same type.
+
+### Tests for the miscellaneous Vim scripts
+
+The Vim auto-load script `autoload/xolox/misc/tests.vim` contains the
+automated test suite of the miscellaneous Vim scripts. Right now the
+coverage is not very high yet, but this will improve over time.
+
+#### The `xolox#misc#tests#run()` function
+
+Run the automated test suite of the miscellaneous Vim scripts. To be used
+interactively. Intended to be safe to execute irrespective of context.
+
+#### The `xolox#misc#tests#pattern_escaping()` function
+
+Test escaping of regular expression patterns with
+`xolox#misc#escape#pattern()`.
+
+#### The `xolox#misc#tests#substitute_escaping()` function
+
+Test escaping of substitution strings with
+`xolox#misc#escape#substitute()`.
+
+#### The `xolox#misc#tests#shell_escaping()` function
+
+Test escaping of shell arguments with `xolox#misc#escape#shell()`.
+
+#### The `xolox#misc#tests#making_a_list_unique()` function
+
+Test removing of duplicate values from lists with
+`xolox#misc#list#unique()`.
+
+#### The `xolox#misc#tests#binary_insertion()` function
+
+Test the binary insertion algorithm implemented in
+`xolox#misc#list#binsert()`.
+
+#### The `xolox#misc#tests#getting_configuration_options()` function
+
+Test getting of scoped plug-in configuration "options" with
+`xolox#misc#option#get()`.
+
+#### The `xolox#misc#tests#splitting_of_multi_valued_options()` function
+
+Test splitting of multi-valued Vim options with
+`xolox#misc#option#split()`.
+
+#### The `xolox#misc#tests#joining_of_multi_valued_options()` function
+
+Test joining of multi-valued Vim options with `xolox#misc#option#join()`.
+
+#### The `xolox#misc#tests#evaluation_of_tags_option()` function
+
+Test evaluation of Vim's ['tags'] [] option. We don't test `~/.tags` style
+patterns because `xolox#misc#option#eval_tags()` doesn't support those.
+Depending on your perspective this is not a bug, because the ['tags'] []
+option gets special treatment in Vim anyway:
+
+  :set tags=~/.tags
+    tags=~/.tags
+  :echo &tags
+    /home/peter/.tags
+
+So at the point where `xolox#misc#option#eval_tags()` receives the value
+of ['tags'] [], it has already been expanded by Vim.
+
+['tags']: http://vimdoc.sourceforge.net/htmldoc/options.html#'tags'
+
+#### The `xolox#misc#tests#finding_vim_on_the_search_path()` function
+
+Test looking up Vim's executable on the search path using [v:progname] []
+with `xolox#misc#os#find_vim()`.
+
+[v:progname]: http://vimdoc.sourceforge.net/htmldoc/eval.html#v:progname
+
+#### The `xolox#misc#tests#synchronous_command_execution()` function
+
+Test basic functionality of synchronous command execution with
+`xolox#misc#os#exec()`.
+
+#### The `xolox#misc#tests#synchronous_command_execution_with_raising_of_errors()` function
+
+Test raising of errors during synchronous command execution with
+`xolox#misc#os#exec()`.
+
+#### The `xolox#misc#tests#synchronous_command_execution_without_raising_errors()` function
+
+Test synchronous command execution without raising of errors with
+`xolox#misc#os#exec()`.
+
+#### The `xolox#misc#tests#asynchronous_command_execution()` function
+
+Test basic functionality of asynchronous command execution with
+`xolox#misc#os#exec()`.
 
 ### Timing of long during operations
 
@@ -418,12 +590,6 @@ handling as Vim's [printf()] [printf] function with one difference: At the
 point where you want the elapsed time to be embedded, you write `%s` and
 you pass the list returned by `xolox#misc#timer#start()` as an argument.
 
-#### The `xolox#misc#timer#format_timespan()` function
-
-Format a time stamp (a string containing a formatted floating point
-number) into a human friendly format, for example 70 seconds is phrased as
-"1 minute and 10 seconds".
-
 <!-- End of generated documentation -->
 
 ## Contact
@@ -431,18 +597,19 @@ number) into a human friendly format, for example 70 seconds is phrased as
 If you have questions, bug reports, suggestions, etc. the author can be
 contacted at <peter@peterodding.com>. The latest version is available at
 <http://peterodding.com/code/vim/misc> and <http://github.com/xolox/vim-misc>.
-If you like the script please vote for it on [Vim Online] [vim-online].
+If you like the script please vote for it on [Vim Online] [].
 
 ## License
 
-This software is licensed under the [MIT license] [mit].  
+This software is licensed under the [MIT license] [].  
 © 2013 Peter Odding &lt;<peter@peterodding.com>&gt;.
 
 
-[download]: http://peterodding.com/code/vim/downloads/misc.zip
-[mit]: http://en.wikipedia.org/wiki/MIT_License
-[pathogen]: http://www.vim.org/scripts/script.php?script_id=2332
+[MIT license]: http://en.wikipedia.org/wiki/MIT_License
+[Pathogen]: http://www.vim.org/scripts/script.php?script_id=2332
 [plugins]: http://peterodding.com/code/vim/
 [repository]: https://github.com/xolox/vim-misc
-[vim-online]: http://www.vim.org/scripts/script.php?script_id=4597
-[vundle]: https://github.com/gmarik/vundle
+[Vim Online]: http://www.vim.org/scripts/script.php?script_id=4597
+[vim-tools]: http://peterodding.com/code/vim/tools/
+[Vundle]: https://github.com/gmarik/vundle
+[ZIP archive]: http://peterodding.com/code/vim/downloads/misc.zip
