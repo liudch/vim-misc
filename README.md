@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 67 functions below was extracted from
-15 Vim scripts on June  3, 2013 at 21:53.
+The documentation of the 68 functions below was extracted from
+15 Vim scripts on June 19, 2013 at 21:05.
 
 ### Handling of special buffers
 
@@ -201,10 +201,10 @@ only converted to strings when the user has enabled increased verbosity.
 
 #### The `xolox#misc#open#file()` function
 
-Given a pathname as the first argument, this opens the file with the
-program associated with the file type. So for example a text file might
-open in Vim, an `*.html` file would probably open in your web browser and
-a media file would open in a media player.
+Given a pathname or URL as the first argument, this opens the file with
+the program associated with the file type. So for example a text file
+might open in Vim, an `*.html` file would probably open in your web
+browser and a media file would open in a media player.
 
 This should work on Windows, Mac OS X and most Linux distributions. If
 this fails to find a file association, you can pass one or more external
@@ -279,6 +279,14 @@ optional second argument is 1 (true) only the first match is returned,
 otherwise (so by default) a list with all matches is returned.
 
 ### Operating system interfaces
+
+#### The `xolox#misc#os#is_mac()` function
+
+Returns 1 (true) when on Mac OS X, 0 (false) otherwise. You would expect
+this to simply check the Vim feature list, but for some obscure reason the
+`/usr/bin/vim` included in Mac OS X (verified on version 10.7.5) returns 0
+(false) in response to `has('mac')`, so we check the output of `uname`
+to avoid false negatives.
 
 #### The `xolox#misc#os#is_win()` function
 
