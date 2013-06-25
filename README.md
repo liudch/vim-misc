@@ -37,8 +37,8 @@ from the source code of the miscellaneous scripts using the Python module
 
 <!-- Start of generated documentation -->
 
-The documentation of the 79 functions below was extracted from
-15 Vim scripts on June 25, 2013 at 00:11.
+The documentation of the 80 functions below was extracted from
+15 Vim scripts on June 26, 2013 at 00:09.
 
 ### Handling of special buffers
 
@@ -337,6 +337,13 @@ Returns a dictionary with one or more of the following key/value pairs:
 
 [vim-shell]: http://peterodding.com/code/vim/shell/
 
+#### The `xolox#misc#os#can_use_dll()` function
+
+If a) we're on Microsoft Windows, b) the vim-shell plug-in is installed
+and c) the compiled DLL included in vim-shell works, we can use the
+vim-shell plug-in to execute external commands! Returns 1 (true)
+if we can use the DLL, 0 (false) otherwise.
+
 ### Pathname manipulation functions
 
 #### The `xolox#misc#path#which()` function
@@ -541,23 +548,6 @@ Test splitting of multi-valued Vim options with
 
 Test joining of multi-valued Vim options with `xolox#misc#option#join()`.
 
-#### The `xolox#misc#tests#evaluation_of_tags_option()` function
-
-Test evaluation of Vim's ['tags'] [] option. We don't test `~/.tags` style
-patterns because `xolox#misc#option#eval_tags()` doesn't support those.
-Depending on your perspective this is not a bug, because the ['tags'] []
-option gets special treatment in Vim anyway:
-
-  :set tags=~/.tags
-    tags=~/.tags
-  :echo &tags
-    /home/peter/.tags
-
-So at the point where `xolox#misc#option#eval_tags()` receives the value
-of ['tags'] [], it has already been expanded by Vim.
-
-['tags']: http://vimdoc.sourceforge.net/htmldoc/options.html#'tags'
-
 #### The `xolox#misc#tests#finding_vim_on_the_search_path()` function
 
 Test looking up Vim's executable on the search path using [v:progname] []
@@ -569,6 +559,12 @@ with `xolox#misc#os#find_vim()`.
 
 Test basic functionality of synchronous command execution with
 `xolox#misc#os#exec()`.
+
+#### The `xolox#misc#tests#synchronous_command_execution_with_stderr()` function
+
+Test basic functionality of synchronous command execution with
+`xolox#misc#os#exec()` including the standard error stream (not available
+on Windows when vim-shell is not installed).
 
 #### The `xolox#misc#tests#synchronous_command_execution_with_raising_of_errors()` function
 
@@ -582,8 +578,11 @@ Test synchronous command execution without raising of errors with
 
 #### The `xolox#misc#tests#asynchronous_command_execution()` function
 
-Test basic functionality of asynchronous command execution with
-`xolox#misc#os#exec()`.
+Test the basic functionality of asynchronous command execution with
+`xolox#misc#os#exec()`. This runs the external command `mkdir` and tests
+that the side effect of creating the directory takes place. This might
+seem like a peculiar choice, but it's one of the few 100% portable
+commands (Windows + UNIX) that doesn't involve input/output streams.
 
 #### The `xolox#misc#tests#string_case_transformation()` function
 
